@@ -7,7 +7,9 @@ const knex = require('knex')(require('../knexfile.js')[process.env.NODE_ENV || '
 
 /* GET home page. */
 router.get('/users', function(req, res, next) {
+ 
   const {username,password}=req.cookies;
+  console.log(username);
   if(!username||!password){
     res.status(404).json({msg:'hey login before!!!'})
     return;
@@ -24,7 +26,7 @@ router.get('/users', function(req, res, next) {
 
 router.get('/logout', function(req, res, next) {
    
-   res.cookie({username:'',password:''}).
+   res.clearCookie('username').clearCookie('password').
     status(200).json({msg:'logout successful'})
 });
 
@@ -66,13 +68,10 @@ router.get('/users/:command', function(req, res, next) {
   }
   
   const {command}=req.params;
-  console.log(command);
-
  
+
   switch(command){
     case 'products' :{
-     
-     
       knex.schema.raw(`SELECT products.id,
                         products.title,
                         products.created_at,
@@ -80,7 +79,7 @@ router.get('/users/:command', function(req, res, next) {
                     FROM products join users_products 
                     ON (products.id=users_products.product_id)  
                     JOIN users 
-                    ON (users.id=users_products.user_id) where users.username='${parseInt(username)}';`).then(select=>res.json(select.rows))
+                    ON (users.id=users_products.user_id) where users.username='${username}';`).then(select=>res.json(select.rows))
                    
     }break;
     case 'tasks':{
@@ -91,9 +90,8 @@ router.get('/users/:command', function(req, res, next) {
       FROM tasks join users_tasks 
       ON (tasks.id=users_tasks.task_id)  
       JOIN users 
-      ON (users.id=users_tasks.user_id) where users.username='${parseInt(username)}';`).then(select=>res.json(select.rows))
+      ON (users.id=users_tasks.user_id) where users.username='${username}';`).then(select=>res.json(select.rows))
    
-
     }break;
     default:{
        res.status(400).json({status:400,err:'incorrect request'});
