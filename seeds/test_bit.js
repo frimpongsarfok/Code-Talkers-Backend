@@ -9,10 +9,15 @@ exports.seed = async function(knex) {
   await knex('tasks').del();
   await knex('users_tasks').del();
   await knex('users_products').del();
-  
+  await knex('login').del();
+
+  await knex('login').insert([
+    {username:'frimpong1234',password:'1234'},
+    {username:'rocco1234',password:'1234'}
+   ])
   await knex('users').insert([
-    {fname:'Sarfo', lname: 'Frimpong',email:'frimpongsarfok@gmail.com',isAdmin:true},
-    {fname:'Patrick', lname: 'Rocco',email:'rocco@rpatrick.com',isAdmin:false},
+    {fname:'Sarfo', lname: 'Frimpong',email:'frimpongsarfok@gmail.com',username:'frimpong1234',isAdmin:true},
+    {fname:'Patrick', lname: 'Rocco',email:'rocco@rpatrick.com',username:'rocco1234',isAdmin:false},
 
    ])
    await knex('products').insert([

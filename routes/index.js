@@ -1,48 +1,98 @@
+const { common } = require('@material-ui/core/colors');
 const { round } = require('cli-boxes');
 var express = require('express');
+const url=require('url')
 var router = express.Router();
 const knex = require('knex')(require('../knexfile.js')[process.env.NODE_ENV || 'development']);
 
 /* GET home page. */
 router.get('/users', function(req, res, next) {
-  const {id}=req.query;
-  id?knex('users').where({id:id}).then(rows=>{
-    res.status(200).json(rows);
- }).catch(err=>res.status(400).send(err)):
-  knex('users').then(rows=>{
-     res.status(200).json(rows);
-  }).catch(err=>res.status(400).send(err));
+  const {username,password}=req.cookies;
+  if(!username||!password){
+    res.status(404).json({msg:'hey login before!!!'})
+    return;
+  }
+   const {id}=req.query;
+    id?knex('users').where({id:id}).then(rows=>{
+      res.status(200).json(rows);
+   }).catch(err=>res.status(400).send(err)):
+    knex('users').then(rows=>{
+       res.status(200).json(rows);
+    }).catch(err=>res.status(400).send(err));
+  
+});
 
+router.get('/logout', function(req, res, next) {
+   
+   res.cookie({username:'',password:''}).
+    status(200).json({msg:'logout successful'})
+});
+
+router.get('/login', function(req, res, next) {
+  if(!req.body.username|| !req.body.password){
+     res.status(400).json({msg:'provide username and password'});
+     return;
+  }
+
+  res.setHeader("Access-Control-Allow-Origin","*");
+  res.setHeader( 'Content-Type','application/json');
+
+
+ knex('login').where(req.body).then(rows=>{
+    
+  
+      if(!rows.length){
+        res.status(404).json({msg:'user not found'})
+      }else{
+       
+            res.cookie('username',rows[0].username).
+              cookie('password',rows[0].password).
+              status(200).redirect('/users/products');
+
+      }
+
+     
+ }).catch(err=>res.status(400).json(err));
 
 });
 
-router.get('/users/:command', function(req, res, next) {
-  const {users_id}=req.query;
-  const {command}=req.params;
-  switch(command){
-    case 'products':{
-     
 
-      users_id?knex.schema.raw(`SELECT products.id,
+router.get('/users/:command', function(req, res, next) {
+  const {username,password}=req.cookies;
+
+  if(!username||!password){
+    res.status(404).json({msg:'hey login before!!!'})
+    return;
+  }
+  
+  const {command}=req.params;
+  console.log(command);
+
+ 
+  switch(command){
+    case 'products' :{
+     
+     
+      knex.schema.raw(`SELECT products.id,
                         products.title,
                         products.created_at,
                         products.updated_at
                     FROM products join users_products 
                     ON (products.id=users_products.product_id)  
                     JOIN users 
-                    ON (users.id=users_products.user_id) where users.id=${parseInt(users_id)}`).then(select=>res.json(select.rows))
-                    :res.status(400).json({status:400,err:'user id not specified'});
+                    ON (users.id=users_products.user_id) where users.username='${parseInt(username)}';`).then(select=>res.json(select.rows))
+                   
     }break;
     case 'tasks':{
-      users_id?knex.schema.raw(`SELECT tasks.id,
+      knex.schema.raw(`SELECT tasks.id,
           tasks.title,
           tasks.status,
           tasks.tags
       FROM tasks join users_tasks 
       ON (tasks.id=users_tasks.task_id)  
       JOIN users 
-      ON (users.id=users_tasks.user_id) where users.id=${parseInt(users_id)}`).then(select=>res.json(select.rows))
-      :res.status(400).json({status:400,err:'user id not specified'});
+      ON (users.id=users_tasks.user_id) where users.username='${parseInt(username)}';`).then(select=>res.json(select.rows))
+   
 
     }break;
     default:{
@@ -50,8 +100,16 @@ router.get('/users/:command', function(req, res, next) {
     }
   }
 
+ 
+
 });
 router.get('/products', function(req, res, next) {
+  const {username,password}=req.cookies;
+  if(!username||!password){
+    res.status(404).json({msg:'hey login before!!!'})
+    return;
+  }
+
   const {id,}=req.query;
 
   id?knex('products').where({id:id}).then(rows=>{
@@ -66,6 +124,12 @@ router.get('/products', function(req, res, next) {
 
 
 router.get('/tasks', function(req, res, next) {
+  const {username,password}=req.cookies;
+  if(!username||!password){
+    res.status(404).json({msg:'hey login before!!!'})
+    return;
+  }
+
   const {product_id}=req.query;
   knex('tasks').where({product_id:product_id}).then(rows=>{
     res.status(200).json(rows);
@@ -75,28 +139,54 @@ router.get('/tasks', function(req, res, next) {
 /* POST */
 
 router.post('/users', function(req, res, next) {
+  const {username,password}=req.cookies;
+  if(!username||!password){
+    res.status(404).json({msg:'hey login before!!!'})
+    return;
+  }
+
   knex('users').insert(req.query).then(select=>{
     res.status(201).json({status:201,msg:'Added Successful'});
  }).catch(err=>res.json(err));
 });
 
+
 router.post('/products', function(req, res, next) {
+  const {username,password}=req.cookies;
+  if(!username||!password){
+    res.status(404).json({msg:'hey login before!!!'})
+    return;
+  }
+
   knex('products').insert(req.query).then(select=>{
     res.status(201).json({status:201,msg:'Added Successful'});
  }).catch(err=>res.json(err));
 });
 
 router.post('/tasks', function(req, res, next) {
+  const {username,password}=req.cookies;
+  if(!username||!password){
+    res.status(404).json({msg:'hey login before!!!'})
+    return;
+  }
+
   knex('tasks').insert(req.query).then(select=>{
     res.status(201).json({status:201,msg:'Added Successful'});
  }).catch(err=>res.json(err));
 });
 
 router.patch('/tasks', function(req, res, next) {
+  const {username,password}=req.cookies;
+  if(!username||!password){
+    res.status(404).json({msg:'hey login before!!!'})
+    return;
+  }
   knex('tasks').update(req.query).where({product_id:req.query.product_id}).then(rows=>{
     res.status(201).json({status:204,msg:'Update Successful'});
  }).catch(err=>res.json(err));
 });
+
+
 
 
 

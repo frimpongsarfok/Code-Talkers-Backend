@@ -3,12 +3,21 @@
  * @returns { Promise<void> }
  */
 exports.up = function(knex) {
-   return knex.schema.createTable('users', table => {
+   return knex.schema
+   .createTable('login', table => {
+        table.string('username').primary();
+        table.string('password');
+        table.timestamps(true, true);
+    })
+   
+   .createTable('users', table => {
         table.increments('id').primary();
         table.string('fname');
         table.string('lname');
         table.string('email');
         table.boolean('isAdmin');
+        table.string('username');
+        table.foreign('username').references('username').inTable('login');
     })
     .createTable('products', table => {
         table.increments('id').primary();
@@ -37,7 +46,8 @@ exports.up = function(knex) {
         table.integer('product_id');
         table.foreign('user_id').references('id').inTable('users').onDelete('cascade');
         table.foreign('product_id').references('id').inTable('products').onDelete('cascade');
-    });
+    })
+
 };    
 
 /**
@@ -46,9 +56,11 @@ exports.up = function(knex) {
  */
 exports.down = function(knex) {
     return knex.schema
-    .dropTableIfExists('users_products')
-    .dropTableIfExists('users_tasks')
-    .dropTableIfExists('tasks')
-    .dropTableIfExists('products')
-    .dropTableIfExists('users');
+    // .dropTableIfExists('users_products')
+    // .dropTableIfExists('users_tasks')
+    // .dropTableIfExists('tasks')
+    // .dropTableIfExists('products')
+    // .dropTableIfExists('users')
+    .dropTableIfExists('login');
+    
 };

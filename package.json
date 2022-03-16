@@ -1,71 +1,32 @@
 {
-<<<<<<< HEAD
-  "dependencies": {
-    "@emotion/react": "^11.8.2",
-    "@emotion/styled": "^11.8.1",
-    "@material-ui/icons": "^4.11.2",
-    "@mui/icons-material": "^5.5.1",
-    "@mui/material": "^5.5.1",
-    "@mui/x-data-grid": "^5.6.1",
-    "@testing-library/jest-dom": "^5.16.2",
-    "@testing-library/react": "^12.1.4",
-    "@testing-library/user-event": "^13.5.0",
-    "react": "^17.0.2",
-    "react-beautiful-dnd": "^13.1.0",
-    "react-dnd": "^15.1.1",
-    "react-dnd-html5-backend": "^15.1.2",
-    "react-dom": "^17.0.2",
-    "react-onclickoutside": "^6.12.1",
-    "react-scripts": "^5.0.0",
-    "react-textarea-autosize": "^8.3.3",
-    "web-vitals": "^2.1.4"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "devDependencies": {
-    "@testing-library/cypress": "^8.0.2",
-    "cypress": "^9.5.2",
-    "jest": "^27.5.1",
-    "js-cookie": "^3.0.1",
-    "sass": "^1.49.9"
-=======
   "name": "backend",
-  "version": "0.0.0",
-  "private": true,
+  "version": "1.0.0",
+  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
+  "main": "app.js",
   "scripts": {
-    "start": "nodemon ./bin/www"
+    "start": "nodemon ./bin/www.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sumakartik/Code-Talkers.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sumakartik/Code-Talkers/issues"
+  },
+  "homepage": "https://github.com/sumakartik/Code-Talkers#readme",
   "dependencies": {
-    "cookie-parser": "~1.4.4",
-    "debug": "~2.6.9",
-    "express": "~4.16.1",
-    "http-errors": "~1.6.3",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "express": "^4.17.3",
     "knex": "^1.0.4",
-    "morgan": "~1.9.1",
+    "morgan": "^1.10.0",
     "nodemon": "^2.0.15",
     "pg": "^8.7.3"
->>>>>>> cf1b89d (backend)
+  },
+  "devDependencies": {
+    "url": "^0.11.0"
   }
 }
