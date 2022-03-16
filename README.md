@@ -1,8 +1,14 @@
 ## STEPS TO INSTALL AND RUN
 
-
-1. create postgres database db name = 'code_talkers'
-2. npm install
-3. npx knex  migrate:lastest
-4. npx knex seed:run
-5. npm start
+#set up db
+1.docker ps -a 
+2. docker exec -it <post container id> bash
+3. psql -U <user name>
+4. CREATE DATABASE code_talkers;
+  
+#install app
+1. npm install
+2. npx knex  migrate:lastest
+3. npx knex seed:run
+4. npm start
+ 
