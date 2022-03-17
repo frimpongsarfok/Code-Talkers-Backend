@@ -1,3 +1,10 @@
+# Code-Talkers: A Project Management App Designed for Product Owners
+
+This project has a second repo linked for the backend which you can access at https://github.com/sumakartik/Code-Talkers
+
+You would clone both repositories down in order to have a full working app.
+
+
 ## STEPS TO INSTALL AND RUN
 
 #set up db
